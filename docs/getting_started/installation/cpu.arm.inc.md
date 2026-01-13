@@ -136,14 +136,20 @@ Testing has been conducted on AWS Graviton3 instances for compatibility.
 # --8<-- [end:build-wheel-from-source]
 # --8<-- [start:pre-built-images]
 
-See [Using Docker](../../deployment/docker.md) for instructions on using the official Docker image.
+To pull the latest image:
 
-Stable vLLM Docker images are being pre-built for Arm from version 0.12.0. Available image tags are here: [https://gallery.ecr.aws/q9t5s3a7/vllm-arm64-cpu-release-repo](https://gallery.ecr.aws/q9t5s3a7/vllm-arm64-cpu-release-repo).
+```bash
+docker pull public.ecr.aws/q9t5s3a7/vllm-arm64-cpu-release-repo:latest
+```
+
+To pull an image with a specific vLLM version:
 
 ```bash
 export VLLM_VERSION=$(curl -s https://api.github.com/repos/vllm-project/vllm/releases/latest | jq -r .tag_name | sed 's/^v//')
 docker pull public.ecr.aws/q9t5s3a7/vllm-arm64-cpu-release-repo:v${VLLM_VERSION}
 ```
+
+All available image tags are here: [https://gallery.ecr.aws/q9t5s3a7/vllm-arm64-cpu-release-repo](https://gallery.ecr.aws/q9t5s3a7/vllm-arm64-cpu-release-repo).
 
 You can also access the latest code with Docker images. These are not intended for production use and are meant for CI and testing only. They will expire after several days.
 
@@ -153,6 +159,8 @@ The latest code can contain bugs and may not be stable. Please use it with cauti
 export VLLM_COMMIT=6299628d326f429eba78736acb44e76749b281f5 # use full commit hash from the main branch
 docker pull public.ecr.aws/q9t5s3a7/vllm-ci-postmerge-repo:${VLLM_COMMIT}-arm64-cpu
 ```
+
+See [Using Docker](../../deployment/docker.md) for instructions on using the official Docker image.
 
 # --8<-- [end:pre-built-images]
 # --8<-- [start:build-image-from-source]

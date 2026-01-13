@@ -27,6 +27,9 @@ podman run --device nvidia.com/gpu=all \
   --model Qwen/Qwen3-0.6B
 ```
 
+If you built a custom image for CPU, you can remove the `--runtime nvidia` and
+`--gpus all` args if you are using Docker or the `--device nvidia.com/gpu-all` arg if you are using Podman.
+
 You can add any other [engine-args](../configuration/engine_args.md) you need after the image tag (`vllm/vllm-openai:latest`).
 
 !!! note
@@ -143,6 +146,20 @@ For (G)B300, we recommend using CUDA 13, as shown in the following command.
 
     After setting up QEMU, you can use the `--platform "linux/arm64"` flag in your `docker build` command.
 
+## Building for CPU
+
+<gh-file:docker/Dockerfile.cpu> is provided to allow for building a vLLM image that will run on CPU only and
+not take advantage of any hardware acceleration. This can be useful for simple development purposes or for
+CI images running in environments with no GPUs. You should not build these images for any production usage.
+
+```bash
+# optionally specifies: --build-arg max_jobs=8
+DOCKER_BUILDKIT=1 docker build . \
+    --target vllm-openai \
+    --tag vllm/vllm-cpu \
+    --file docker/Dockerfile.cpu
+```
+
 ## Use the custom-built vLLM Docker image
 
 To run vLLM with the custom-built Docker image:
@@ -156,6 +173,16 @@ docker run --runtime nvidia --gpus all \
 ```
 
 The argument `vllm/vllm-openai` specifies the image to run, and should be replaced with the name of the custom-built image (the `-t` tag from the build command).
+
+If you built a custom image for CPU, you can remove the `--runtime nvidia` and `--gpus all` args and simply run:
+
+```bash
+docker run \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    -p 8000:8000 \
+    --env "HF_TOKEN=<secret>" \
+    vllm/vllm-openai <args...>
+```
 
 !!! note
     **For version 0.4.1 and 0.4.2 only** - the vLLM docker images under these versions are supposed to be run under the root user since a library under the root user's home directory, i.e. `/root/.config/vllm/nccl/cu12/libnccl.so.2.18.1` is required to be loaded during runtime. If you are running the container under a different user, you may need to first change the permissions of the library (and all the parent directories) to allow the user to access it, then run vLLM with environment variable `VLLM_NCCL_SO_PATH=/root/.config/vllm/nccl/cu12/libnccl.so.2.18.1` .
