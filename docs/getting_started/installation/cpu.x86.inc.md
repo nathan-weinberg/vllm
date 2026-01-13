@@ -161,10 +161,18 @@ uv pip install dist/*.whl
 # --8<-- [end:build-wheel-from-source]
 # --8<-- [start:pre-built-images]
 
-[https://gallery.ecr.aws/q9t5s3a7/vllm-cpu-release-repo](https://gallery.ecr.aws/q9t5s3a7/vllm-cpu-release-repo)
+You can pull the latest available CPU image here via:
+
+```bash
+docker pull public.ecr.aws/q9t5s3a7/vllm-cpu-release-repo:latest
+```
+
+If you want a more specific build you can find all published CPU based images here: [https://gallery.ecr.aws/q9t5s3a7/vllm-cpu-release-repo](https://gallery.ecr.aws/q9t5s3a7/vllm-cpu-release-repo)
 
 !!! warning
     If deploying the pre-built images on machines without `avx512f`, `avx512_bf16`, or `avx512_vnni` support, an `Illegal instruction` error may be raised. It is recommended to build images for these machines with the appropriate build arguments (e.g., `--build-arg VLLM_CPU_DISABLE_AVX512=true`, `--build-arg VLLM_CPU_AVX512BF16=false`, or `--build-arg VLLM_CPU_AVX512VNNI=false`) to disable unsupported features. Please note that without `avx512f`, AVX2 will be used and this version is not recommended because it only has basic feature support.
+
+See [Using Docker](../../deployment/docker.md) for instructions on using the official Docker image.
 
 # --8<-- [end:pre-built-images]
 # --8<-- [start:build-image-from-source]

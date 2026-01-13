@@ -143,6 +143,20 @@ For (G)B300, we recommend using CUDA 13, as shown in the following command.
 
     After setting up QEMU, you can use the `--platform "linux/arm64"` flag in your `docker build` command.
 
+## Building for CPU
+
+<gh-file:docker/Dockerfile.cpu> is provided to allow for building a vLLM image that will run on CPU only and
+not take advantage of any hardware acceleration. This can be useful for simple development purposes or for
+CI images running in environments with no GPUs. You should not build these images for any production usage.
+
+```bash
+# optionally specifies: --build-arg max_jobs=8
+DOCKER_BUILDKIT=1 docker build . \
+    --target vllm-openai \
+    --tag vllm/vllm-cpu \
+    --file docker/Dockerfile.cpu
+```
+
 ## Use the custom-built vLLM Docker image
 
 To run vLLM with the custom-built Docker image:
